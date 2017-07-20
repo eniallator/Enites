@@ -1,6 +1,7 @@
-local createQueue = function()
+local createQueue = function(callbackOnRetrieve)
   local queue = {}
   queue.__items = {}
+  queue.__callbackOnRetrieve = callbackOnRetrieve
 
   function queue:add(item)
     table.insert(queue.__items, item)
@@ -13,6 +14,10 @@ local createQueue = function()
 
     local item = queue.__items[1]
     table.remove(queue.__items, 1)
+
+    if self.__callbackOnRetrieve then
+      return self.__callbackOnRetrieve(item)
+    end
 
     return item
   end

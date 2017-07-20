@@ -1,12 +1,17 @@
+local createRectangle = require 'src/rectangle'
+
 local ladder = {}
 
-ladder.deposit = {}
-ladder.deposit.pos = {x = screenDim.x - screenDim.x / 40, y = 0}
-ladder.deposit.dim = {w = screenDim.x - ladder.deposit.pos.x, h = screenDim.y / 30}
+ladder.deposit = createRectangle(
+  screenDim.x - screenDim.x / 40,
+  0,
+  screenDim.x / 40,
+  screenDim.y / 30
+)
 
 ladder.display = function()
   love.graphics.setColor(200, 200, 100)
-  love.graphics.rectangle('fill', ladder.deposit.pos.x, ladder.deposit.pos.y, ladder.deposit.dim.w, ladder.deposit.dim.h)
+  love.graphics.rectangle('fill', ladder.deposit.x, ladder.deposit.y, ladder.deposit.w, ladder.deposit.h)
 end
 
 return ladder

@@ -1,7 +1,7 @@
 local collision = {}
 
 local function collideAxis(box1, box2, axis, dim)
-  if box1.pos[axis] < box2.pos[axis] + box2.dim[dim] and box2.pos[axis] <= box1.pos[axis] + box1.dim[dim] then
+  if box1[axis] < box2[axis] + box2[dim] and box2[axis] <= box1[axis] + box1[dim] then
     return true
   end
 end
