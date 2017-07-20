@@ -24,9 +24,11 @@ end
 
 local function goTowardPos(currEnite, pos, speed)
   local eniteMid = currEnite.box:getMid()
+  local posMid = pos:getMid()
+
   local diff = {
-    x = math.abs(eniteMid.x - pos.x),
-    y = math.abs(eniteMid.y - pos.y)
+    x = math.abs(eniteMid.x - posMid.x),
+    y = math.abs(eniteMid.y - posMid.y)
   }
 
   local moveDist = {
@@ -34,14 +36,34 @@ local function goTowardPos(currEnite, pos, speed)
     y = speed > diff.y and diff.y or speed
   }
 
-  if eniteMid.x == pos.x then
-    applyMovement(currEnite, pos, moveDist, 'y')
+  if eniteMid.x == posMid.x then
+    local ladderIndex = ladder.stack:findStack(pos)
+
+    if ladderIndex then
+      if ladder.stack:isOnLadder(currEnite.box) then
+        applyMovement(currEnite, posMid, moveDist, 'y')
+
+      else
+        local currStack = ladder.stack.stacks[ladderIndex]
+        currStack.size = currStack.size + 1
+
+        for i=#currEnite.inventory, 1, -1 do
+          if currEnite.inventory[i] == 'ladder' then
+            table.remove(currEnite.inventory, i)
+            break
+          end
+        end
+      end
+
+    else
+      applyMovement(currEnite, posMid, moveDist, 'y')
+    end
 
   elseif currEnite.box.y > 0 then
     currEnite.box.y = currEnite.box.y - moveDist.y
 
   else
-    applyMovement(currEnite, pos, moveDist, 'x')
+    applyMovement(currEnite, posMid, moveDist, 'x')
   end
 end
 
@@ -65,7 +87,7 @@ local function createEnite(x, y, w, h)
         goTowardPos(self, ladder.deposit, eniteSpeed)
 
       else
-        goTowardPos(self, gold.deposits[currTask.val]:getMid(), eniteSpeed)
+        goTowardPos(self, gold.deposits[currTask.val].box, eniteSpeed)
       end
     end
   end
