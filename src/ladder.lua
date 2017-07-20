@@ -52,7 +52,6 @@ local function createStack()
         currStackHitBox.y = currStack.box.y
         currStackHitBox.w = currStack.box.w
         currStackHitBox.h = currStack.box.h * currStack.size
-        print(serialise(currStackHitBox), serialise(box))
 
         if collision.rectangles(currStackHitBox, box) then
           return true
