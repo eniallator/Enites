@@ -40,7 +40,7 @@ local function goTowardPos(currEnite, pos, speed)
     local ladderIndex = ladder.stack:findStack(pos)
 
     if ladderIndex then
-      if ladder.stack:isOnLadder(currEnite.box) then
+      if ladder.stack:isOnLadder(currEnite.box, ladder.stack.stacks[ladderIndex]) then
         applyMovement(currEnite, posMid, moveDist, 'y')
 
       else

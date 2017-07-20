@@ -24,35 +24,7 @@ local function createStack()
       end
     end
   end
-
-  -- function stack:findStacks(box)
-  --   local found = {}
-  --
-  --   for i, currStack in ipairs(self.stacks) do
-  --     if collision.axis(box, currStack.box, 'x', 'w') then
-  --       table.insert(found, currStack)
-  --     end
-  --   end
-  --
-  --   return found
-  -- end
-  --
-  -- function stack:isOnLadder(box)
-  --   for _, currStack in ipairs(self:findStacks(box)) do
-  --     if currStack.size > 0 then
-  --       local currStackHitBox = {}
-  --       currStackHitBox.x = currStack.box.x
-  --       currStackHitBox.y = currStack.box.y
-  --       currStackHitBox.w = currStack.box.w
-  --       currStackHitBox.h = currStack.box.h * currStack.size
-  --
-  --       if collision.rectangles(currStackHitBox, box) then
-  --         return true
-  --       end
-  --     end
-  --   end
-  -- end
-
+  
   function stack:getStackSize(pos)
     local currStack = self:findStack(pos)
 
