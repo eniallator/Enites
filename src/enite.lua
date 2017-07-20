@@ -89,6 +89,7 @@ local function createEnite(x, y, w, h)
   function newEnite:update(dt)
     checkGold(self)
     local currTask = self.tasks:peek()
+    local destination
 
     if currTask and not gold.deposits[currTask.val] then
       self.tasks:dumpNext()
@@ -96,17 +97,20 @@ local function createEnite(x, y, w, h)
     end
 
     if self.inventory:search('gold') then
-      goTowardPos(self, gold.collection, eniteSpeed)
+      destination = gold.collection
 
       if collision.rectangles(self.box, gold.collection) then
         self.inventory:delItem('gold')
       end
 
-      return
-    end
+    elseif currTask and currTask.name == 'gold' and self.inventory:search('ladder') then
+      destination = gold.deposits[currTask.val].box
 
-    if currTask and currTask.name == 'gold' and self.inventory:search('ladder') then
-      goTowardPos(self, gold.deposits[currTask.val].box, eniteSpeed)
+    elseif #self.inventory.items == 0 then
+      destination = ladder.deposit
+
+    elseif self.box.y > 0 then
+      destination = createRectangle(self.box.x, 0, 0, 0)
     end
 
     if collision.rectangles(self.box, ladder.deposit) and #self.inventory == 0 then
@@ -114,18 +118,21 @@ local function createEnite(x, y, w, h)
     end
 
     if currTask and collision.rectangles(self.box, gold.deposits[currTask.val].box) then
-      table.insert(ladder.decaying, {time = 0, index = ladder.stack:findStack(gold.deposits[currTask.val])})
+      local stackPos = gold.deposits[currTask.val].box
+      local stackIndex = ladder.stack:findStack(stackPos)
+      ladder.stack.stacks[stackIndex].decaying = true
+
       table.insert(self.inventory.items, 'gold')
       table.remove(gold.deposits, currTask.val)
       return
     end
 
-    if #self.inventory.items == 0 then
-      goTowardPos(self, ladder.deposit, eniteSpeed)
+    if gold.newDeposits:getSize() == 0 and not currTask and #gold.deposits > 0 then
+      self.tasks:add({name = 'gold', val = math.random(#gold.deposits)})
     end
 
-    if not currTask and #gold.deposits > 0 then
-      self.tasks:add({name = 'gold', val = math.random(#gold.deposits)})
+    if destination then
+      goTowardPos(self, destination, eniteSpeed)
     end
   end
 

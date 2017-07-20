@@ -18,6 +18,8 @@ local function createStack()
       ladder.defaultDim.w,
       ladder.defaultDim.h
     )
+    newStack.decaying = false
+    newStack.time = 0
 
     newStack.size = size or 0
 
@@ -88,27 +90,24 @@ ladder.deposit = createRectangle(
   screenDim.y / 30
 )
 
-ladder.decaying = {}
-
 ladder.stack = createStack()
 
 ladder.update = function(dt)
-  for i=#ladder.decaying, 1, -1 do
-    local currLadder = ladder.decaying[i]
+  for i=#ladder.stack.stacks, 1, -1 do
+    local currLadder = ladder.stack.stacks[i]
 
-    if currLadder.time > 1 then
-      currLadder.time = currLadder.time - 1
-      ladder.stack.stacks[currLadder.index].size = ladder.stack.stacks[currLadder.index].size - 1
+    if currLadder.decaying then
+      if currLadder.time > 0.5 then
+        currLadder.time = currLadder.time - 0.5
+        currLadder.size = currLadder.size - 1
+      end
+
+      if currLadder.size < 1 then
+        table.remove(ladder.stack.stacks, i)
+      end
+
+      currLadder.time = currLadder.time + dt
     end
-
-    print(serialise(ladder.stack.stacks), serialise(ladder.decaying))
-
-    if ladder.stack.stacks[currLadder.index].size < 1 then
-      table.remove(ladder.decaying, i)
-      table.remove(ladder.stack.stacks, currLadder.index)
-    end
-
-    currLadder.time = currLadder.time + dt
   end
 end
 

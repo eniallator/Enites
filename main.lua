@@ -6,6 +6,7 @@ function love.load()
 
   ladder = require 'src/ladder'
   enites = require 'src/enites'
+  mouse = require 'src/mouse'
   gold = require 'src/gold'
 
   for i=1, 100 do
@@ -20,6 +21,8 @@ end
 function love.update(dt)
   enites.update(dt)
   ladder.update(dt)
+  gold.update(dt)
+  mouse.updateClicked()
 end
 
 function love.draw()

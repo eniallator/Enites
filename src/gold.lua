@@ -23,6 +23,12 @@ gold.createDeposit = function(x, y, value)
   ladder.stack:addStack(x, y)
 end
 
+gold.update = function(dt)
+  if mouse.left.clicked then
+    gold.createDeposit(mouse.pos.x - gold.defaultDim.w / 2, screenDim.y - mouse.pos.y - gold.defaultDim.h / 2)
+  end
+end
+
 gold.display = function()
   love.graphics.setColor(120, 120, 0)
 
