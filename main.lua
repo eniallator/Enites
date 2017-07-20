@@ -25,7 +25,7 @@ function love.draw()
   love.graphics.scale(1, -1)
   love.graphics.translate(0, -screenDim.y)
 
-  enites.display()
   gold.display()
   ladder.display()
+  enites.display()
 end

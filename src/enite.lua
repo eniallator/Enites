@@ -28,7 +28,7 @@ local function goTowardPos(currEnite, pos, speed)
 
   local diff = {
     x = math.abs(eniteMid.x - posMid.x),
-    y = math.abs(eniteMid.y - posMid.y)
+    y = math.abs(eniteMid.y - pos.y)
   }
 
   local moveDist = {
@@ -40,7 +40,7 @@ local function goTowardPos(currEnite, pos, speed)
     local ladderIndex = ladder.stack:findStack(pos)
 
     if ladderIndex then
-      if ladder.stack:isOnLadder(currEnite.box, ladder.stack.stacks[ladderIndex]) then
+      if ladder.stack:isOnLadder(currEnite.box, pos) then
         applyMovement(currEnite, posMid, moveDist, 'y')
 
       else
