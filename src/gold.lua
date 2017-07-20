@@ -5,6 +5,8 @@ local gold = {}
 gold.deposits = {}
 gold.defaultDim = {w = screenDim.x / 40, h = screenDim.y / 30}
 
+gold.collection = createRectangle(0, 0, screenDim.x / 40, screenDim.y / 30)
+
 gold.newDeposits = createQueue(function(item)
   table.insert(gold.deposits, item)
 
@@ -27,6 +29,8 @@ gold.display = function()
   for _, currGold in ipairs(gold.deposits) do
     love.graphics.rectangle('fill', currGold.box.x, currGold.box.y, currGold.box.w, currGold.box.h)
   end
+
+  love.graphics.rectangle('fill', gold.collection.x, gold.collection.y, gold.collection.w, gold.collection.h)
 end
 
 return gold

@@ -8,7 +8,7 @@ function love.load()
   enites = require 'src/enites'
   gold = require 'src/gold'
 
-  for i=1, 3 do
+  for i=1, 100 do
     enites.createEnite()
   end
 
@@ -19,6 +19,7 @@ end
 
 function love.update(dt)
   enites.update(dt)
+  ladder.update(dt)
 end
 
 function love.draw()

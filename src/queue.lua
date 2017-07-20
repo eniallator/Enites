@@ -22,6 +22,14 @@ local createQueue = function(callbackOnRetrieve)
     return item
   end
 
+  function queue:dumpNext()
+    if #queue.__items == 0 then
+      return false
+    end
+
+    table.remove(queue.__items, 1)
+  end
+
   function queue:peek()
     return queue.__items[1]
   end

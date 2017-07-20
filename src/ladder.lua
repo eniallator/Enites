@@ -66,7 +66,7 @@ local function createStack()
     for _, currStack in ipairs(self.stacks) do
       for i=1, currStack.size do
           love.graphics.rectangle(
-          'fill',
+          'line',
           currStack.box.x,
           currStack.box.y + (i - 1) * currStack.box.h,
           currStack.box.w,
@@ -79,6 +79,8 @@ local function createStack()
   return stack
 end
 
+-- clean up code to have the deposit in the createStack class and remove the stack layer
+
 ladder.deposit = createRectangle(
   screenDim.x - screenDim.x / 40,
   0,
@@ -86,7 +88,29 @@ ladder.deposit = createRectangle(
   screenDim.y / 30
 )
 
+ladder.decaying = {}
+
 ladder.stack = createStack()
+
+ladder.update = function(dt)
+  for i=#ladder.decaying, 1, -1 do
+    local currLadder = ladder.decaying[i]
+
+    if currLadder.time > 1 then
+      currLadder.time = currLadder.time - 1
+      ladder.stack.stacks[currLadder.index].size = ladder.stack.stacks[currLadder.index].size - 1
+    end
+
+    print(serialise(ladder.stack.stacks), serialise(ladder.decaying))
+
+    if ladder.stack.stacks[currLadder.index].size < 1 then
+      table.remove(ladder.decaying, i)
+      table.remove(ladder.stack.stacks, currLadder.index)
+    end
+
+    currLadder.time = currLadder.time + dt
+  end
+end
 
 ladder.display = function()
   love.graphics.setColor(200, 200, 100)
