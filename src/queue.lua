@@ -38,6 +38,10 @@ local createQueue = function(callbackOnRetrieve)
     return #queue.__items
   end
 
+  function queue:getItems()
+    return queue.__items
+  end
+
   return queue
 end
 

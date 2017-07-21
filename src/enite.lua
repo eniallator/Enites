@@ -113,7 +113,7 @@ local function createEnite(x, y, w, h)
       destination = createRectangle(self.box.x, 0, 0, 0)
     end
 
-    if collision.rectangles(self.box, ladder.deposit) and #self.inventory == 0 then
+    if collision.rectangles(self.box, ladder.deposit) and #self.inventory.items == 0 then
       table.insert(self.inventory.items, 'ladder')
     end
 

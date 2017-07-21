@@ -9,7 +9,7 @@ function love.load()
   mouse = require 'src/mouse'
   gold = require 'src/gold'
 
-  for i=1, 100 do
+  for i=1, 20 do
     enites.createEnite()
   end
 

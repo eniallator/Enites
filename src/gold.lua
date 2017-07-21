@@ -29,11 +29,19 @@ gold.update = function(dt)
   end
 end
 
+local function displayGold(currGold)
+  love.graphics.rectangle('fill', currGold.box.x, currGold.box.y, currGold.box.w, currGold.box.h)
+end
+
 gold.display = function()
   love.graphics.setColor(120, 120, 0)
 
   for _, currGold in ipairs(gold.deposits) do
-    love.graphics.rectangle('fill', currGold.box.x, currGold.box.y, currGold.box.w, currGold.box.h)
+    displayGold(currGold)
+  end
+
+  for _, currGold in ipairs(gold.newDeposits:getItems()) do
+    displayGold(currGold)
   end
 
   love.graphics.rectangle('fill', gold.collection.x, gold.collection.y, gold.collection.w, gold.collection.h)
