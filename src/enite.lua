@@ -122,6 +122,13 @@ local function createEnite(x, y, w, h)
       local stackIndex = ladder.stack:findStack(stackPos)
       ladder.stack.stacks[stackIndex].decaying = true
 
+      for _, eniteToTell in pairs(enites.population) do
+        if eniteToTell.tasks:peek() and (eniteToTell.tasks:peek()).val > currTask.val then
+          local theirTasks = eniteToTell.tasks:getItems()
+          theirTasks[1].val = theirTasks[1].val - 1
+        end
+      end
+
       table.insert(self.inventory.items, 'gold')
       table.remove(gold.deposits, currTask.val)
       return
