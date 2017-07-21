@@ -3,7 +3,7 @@ local collision = require 'src/collision'
 local createRectangle = require 'src/rectangle'
 
 local ladder = {}
-ladder.defaultDim = {w = screenDim.x / 80, h = screenDim.y / 30}
+ladder.defaultDim = {w = 10, h = 15}
 
 local function createStack()
   local stack = {}
@@ -83,12 +83,7 @@ end
 
 -- clean up code to have the deposit in the createStack class and remove the stack layer
 
-ladder.deposit = createRectangle(
-  screenDim.x - screenDim.x / 40,
-  0,
-  screenDim.x / 40,
-  screenDim.y / 30
-)
+ladder.deposit = createRectangle(screenDim.x - 20, 0, 20, 20)
 
 ladder.stack = createStack()
 

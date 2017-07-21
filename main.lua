@@ -18,6 +18,13 @@ function love.load()
   gold.createDeposit(screenDim.x * 0.75, screenDim.y * 0.5)
 end
 
+function love.resize(x, y)
+  screenDim.x = x
+  screenDim.y = y
+  
+  ladder.deposit.x = screenDim.x - 20
+end
+
 function love.update(dt)
   enites.update(dt)
   ladder.update(dt)

@@ -1,7 +1,7 @@
 local createEnite = require 'src/enite'
 
 local enites = {}
-enites.defaultDim = {w = screenDim.x / 160, h = screenDim.y / 60}
+enites.defaultDim = {w = 5, h = 10}
 enites.population = {}
 
 enites.createEnite = function(x, y)

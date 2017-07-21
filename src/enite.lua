@@ -3,13 +3,7 @@ local collision = require 'src/collision'
 local createRectangle = require 'src/rectangle'
 local createQueue = require 'src/queue'
 
-local eniteSpeed = screenDim.x / 200
-
-local function checkGold(currEnite)
-  if gold.newDeposits:getSize() > 0 and currEnite.tasks:getSize() == 0 then
-    currEnite.tasks:add({name = 'gold', val = gold.newDeposits:retrieve()})
-  end
-end
+local eniteSpeed = 48 * 4
 
 local function applyMovement(currEnite, pos, moveDist, axis)
   local eniteMid = currEnite.box:getMid()
@@ -87,13 +81,16 @@ local function createEnite(x, y, w, h)
   newEnite.tasks = createQueue()
 
   function newEnite:update(dt)
-    checkGold(self)
     local currTask = self.tasks:peek()
     local destination
 
     if currTask and not gold.deposits[currTask.val] then
       self.tasks:dumpNext()
       return
+    end
+
+    if self.box.y < 0 then
+      self.box.y = 0
     end
 
     if self.inventory:search('gold') then
@@ -134,12 +131,15 @@ local function createEnite(x, y, w, h)
       return
     end
 
-    if gold.newDeposits:getSize() == 0 and not currTask and #gold.deposits > 0 then
+    if not currTask and gold.newDeposits:getSize() == 0 and #gold.deposits > 0 then
       self.tasks:add({name = 'gold', val = math.random(#gold.deposits)})
+
+    elseif not currTask and gold.newDeposits:getSize() > 0 then
+      self.tasks:add({name = 'gold', val = gold.newDeposits:retrieve()})
     end
 
     if destination then
-      goTowardPos(self, destination, eniteSpeed)
+      goTowardPos(self, destination, eniteSpeed * dt)
     end
   end
 
