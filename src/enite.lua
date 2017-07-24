@@ -49,7 +49,7 @@ local function goTowardPos(currEnite, pos, speed)
     end
 
   elseif currEnite.box.y > 0 then
-    currEnite.box.y = currEnite.box.y - moveDist.y
+    currEnite.box.y = currEnite.box.y - speed
 
   else
     applyMovement(currEnite, posMid, moveDist, 'x')
