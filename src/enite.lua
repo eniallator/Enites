@@ -3,63 +3,14 @@ local collision = require 'src/collision'
 local createRectangle = require 'src/rectangle'
 local createQueue = require 'src/queue'
 
-local eniteSpeed = 48 * 4
-
-local function applyMovement(currEnite, pos, moveDist, axis)
-  local eniteMid = currEnite.box:getMid()
-
-  if eniteMid[axis] > pos[axis] then
-    currEnite.box[axis] = currEnite.box[axis] - moveDist[axis]
-
-  elseif eniteMid[axis] < pos[axis] then
-    currEnite.box[axis] = currEnite.box[axis] + moveDist[axis]
-  end
-end
-
-local function goTowardPos(currEnite, pos, speed)
-  local eniteMid = currEnite.box:getMid()
-  local posMid = pos:getMid()
-
-  local diff = {
-    x = math.abs(eniteMid.x - posMid.x),
-    y = math.abs(eniteMid.y - pos.y)
-  }
-
-  local moveDist = {
-    x = speed > diff.x and diff.x or speed,
-    y = speed > diff.y and diff.y or speed
-  }
-
-  if eniteMid.x == posMid.x then
-    local ladderIndex = ladder.stack:findStack(pos)
-
-    if ladderIndex then
-      if ladder.stack:isOnLadder(currEnite.box, pos) then
-        applyMovement(currEnite, posMid, moveDist, 'y')
-
-      else
-        local currStack = ladder.stack.stacks[ladderIndex]
-        currStack.size = currStack.size + 1
-
-        currEnite.inventory:delItem('ladder')
-      end
-
-    else
-      applyMovement(currEnite, posMid, moveDist, 'y')
-    end
-
-  elseif currEnite.box.y > 0 then
-    currEnite.box.y = currEnite.box.y - speed
-
-  else
-    applyMovement(currEnite, posMid, moveDist, 'x')
-  end
-end
-
 local function createEnite(x, y, w, h)
   local newEnite = {}
+
+  newEnite.__speed = 48 * 4
+
   newEnite.box = createRectangle(x, y, w, h)
   newEnite.inventory = {items = {}}
+  newEnite.tasks = createQueue()
 
   function newEnite.inventory:delItem(item)
     for i = #self.items, 1, -1 do
@@ -78,7 +29,56 @@ local function createEnite(x, y, w, h)
     end
   end
 
-  newEnite.tasks = createQueue()
+  function newEnite:__applyMovement(pos, moveDist, axis)
+    local eniteMid = self.box:getMid()
+
+    if eniteMid[axis] > pos[axis] then
+      self.box[axis] = self.box[axis] - moveDist[axis]
+
+    elseif eniteMid[axis] < pos[axis] then
+      self.box[axis] = self.box[axis] + moveDist[axis]
+    end
+  end
+
+  function newEnite:__goTowardPos(pos, speed)
+    local eniteMid = self.box:getMid()
+    local posMid = pos:getMid()
+
+    local diff = {
+      x = math.abs(eniteMid.x - posMid.x),
+      y = math.abs(eniteMid.y - pos.y)
+    }
+
+    local moveDist = {
+      x = speed > diff.x and diff.x or speed,
+      y = speed > diff.y and diff.y or speed
+    }
+
+    if eniteMid.x == posMid.x then
+      local ladderIndex = ladder.stack:findStack(pos)
+
+      if ladderIndex then
+        if ladder.stack:isOnLadder(self.box, pos) then
+          self:__applyMovement(posMid, moveDist, 'y')
+
+        else
+          local currStack = ladder.stack.stacks[ladderIndex]
+          currStack.size = currStack.size + 1
+
+          self.inventory:delItem('ladder')
+        end
+
+      else
+        self:__applyMovement(posMid, moveDist, 'y')
+      end
+
+    elseif self.box.y > 0 then
+      self.box.y = self.box.y - speed
+
+    else
+      self:__applyMovement(posMid, moveDist, 'x')
+    end
+  end
 
   function newEnite:update(dt)
     local currTask = self.tasks:peek()
@@ -139,7 +139,7 @@ local function createEnite(x, y, w, h)
     end
 
     if destination then
-      goTowardPos(self, destination, eniteSpeed * dt)
+      self:__goTowardPos(destination, self.__speed * dt)
     end
   end
 
