@@ -8,12 +8,12 @@ local createQueue = function(callbackOnRetrieve)
   end
 
   function queue:retrieve()
-    if #queue.__items == 0 then
+    if #self.__items == 0 then
       return false
     end
 
-    local item = queue.__items[1]
-    table.remove(queue.__items, 1)
+    local item = self.__items[1]
+    table.remove(self.__items, 1)
 
     if self.__callbackOnRetrieve then
       return self.__callbackOnRetrieve(item)
@@ -23,23 +23,23 @@ local createQueue = function(callbackOnRetrieve)
   end
 
   function queue:dumpNext()
-    if #queue.__items == 0 then
+    if #self.__items == 0 then
       return false
     end
 
-    table.remove(queue.__items, 1)
+    table.remove(self.__items, 1)
   end
 
   function queue:peek()
-    return queue.__items[1]
+    return self.__items[1]
   end
 
   function queue:getSize()
-    return #queue.__items
+    return #self.__items
   end
 
   function queue:getItems()
-    return queue.__items
+    return self.__items
   end
 
   return queue
