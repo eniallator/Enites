@@ -4,29 +4,29 @@ function love.load()
   screenDim = {}
   screenDim.x, screenDim.y = love.graphics.getDimensions()
 
+  population = require 'src/population'
   ladder = require 'src/ladder'
-  enites = require 'src/enites'
   mouse = require 'src/mouse'
   gold = require 'src/gold'
 
   for i=1, 20 do
-    enites.createEnite()
+    population.createEnite()
   end
 
-  gold.createDeposit(screenDim.x * 0.25, screenDim.y * 0.5)
-  gold.createDeposit(screenDim.x * 0.5, screenDim.y * 0.5)
+  -- gold.createDeposit(screenDim.x * 0.25, screenDim.y * 0.5)
+  -- gold.createDeposit(screenDim.x * 0.5, screenDim.y * 0.5)
   gold.createDeposit(screenDim.x * 0.75, screenDim.y * 0.5)
 end
 
 function love.resize(x, y)
   screenDim.x = x
   screenDim.y = y
-  
+
   ladder.deposit.x = screenDim.x - 20
 end
 
 function love.update(dt)
-  enites.update(dt)
+  population.update(dt)
   ladder.update(dt)
   gold.update(dt)
   mouse.updateClicked()
@@ -38,5 +38,5 @@ function love.draw()
 
   gold.display()
   ladder.display()
-  enites.display()
+  population.display()
 end

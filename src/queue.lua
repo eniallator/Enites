@@ -12,8 +12,7 @@ local createQueue = function(callbackOnRetrieve)
       return false
     end
 
-    local item = self.__items[1]
-    table.remove(self.__items, 1)
+    local item = table.remove(self.__items, 1)
 
     if self.__callbackOnRetrieve then
       return self.__callbackOnRetrieve(item)

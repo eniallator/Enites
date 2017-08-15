@@ -92,8 +92,8 @@ ladder.update = function(dt)
     local currLadder = ladder.stack.stacks[i]
 
     if currLadder.decaying then
-      if currLadder.time > 0.5 then
-        currLadder.time = currLadder.time - 0.5
+      if currLadder.time > 0.3 then
+        currLadder.time = currLadder.time - 0.3
         currLadder.size = currLadder.size - 1
       end
 

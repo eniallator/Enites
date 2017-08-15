@@ -3,14 +3,16 @@ local collision = require 'src/collision'
 local createRectangle = require 'src/rectangle'
 local createQueue = require 'src/queue'
 
+local defaultDim = {w = 5, h = 10}
+
 local function createEnite(x, y, w, h)
   local newEnite = {}
 
   newEnite.__speed = 48 * 4
 
-  newEnite.box = createRectangle(x, y, w, h)
-  newEnite.inventory = {items = {}}
+  newEnite.box = createRectangle(x, y, w or defaultDim.w, h or defaultDim.h)
   newEnite.tasks = createQueue()
+  newEnite.inventory = {items = {}}
 
   function newEnite.inventory:delItem(item)
     for i = #self.items, 1, -1 do
@@ -29,13 +31,13 @@ local function createEnite(x, y, w, h)
     end
   end
 
-  function newEnite:__applyMovement(pos, moveDist, axis)
+  function newEnite:__applyMovement(target, moveDist, axis)
     local eniteMid = self.box:getMid()
 
-    if eniteMid[axis] > pos[axis] then
+    if eniteMid[axis] > target[axis] then
       self.box[axis] = self.box[axis] - moveDist[axis]
 
-    elseif eniteMid[axis] < pos[axis] then
+    elseif eniteMid[axis] < target[axis] then
       self.box[axis] = self.box[axis] + moveDist[axis]
     end
   end
@@ -67,9 +69,6 @@ local function createEnite(x, y, w, h)
 
           self.inventory:delItem('ladder')
         end
-
-      else
-        self:__applyMovement(posMid, moveDist, 'y')
       end
 
     elseif self.box.y > 0 then
@@ -119,7 +118,7 @@ local function createEnite(x, y, w, h)
       local stackIndex = ladder.stack:findStack(stackPos)
       ladder.stack.stacks[stackIndex].decaying = true
 
-      for _, eniteToTell in pairs(enites.population) do
+      for _, eniteToTell in ipairs(population) do
         if eniteToTell.tasks:peek() and (eniteToTell.tasks:peek()).val > currTask.val then
           local theirTasks = eniteToTell.tasks:getItems()
           theirTasks[1].val = theirTasks[1].val - 1
