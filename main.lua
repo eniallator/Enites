@@ -13,8 +13,8 @@ function love.load()
     population.createEnite()
   end
 
-  -- gold.createDeposit(screenDim.x * 0.25, screenDim.y * 0.5)
-  -- gold.createDeposit(screenDim.x * 0.5, screenDim.y * 0.5)
+  gold.createDeposit(screenDim.x * 0.25, screenDim.y * 0.5)
+  gold.createDeposit(screenDim.x * 0.5, screenDim.y * 0.5)
   gold.createDeposit(screenDim.x * 0.75, screenDim.y * 0.5)
 end
 
